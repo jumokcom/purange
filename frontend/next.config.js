@@ -20,13 +20,6 @@ const nextConfig = {
       'purange-backend.onrender.com'
     ],
   },
-  
-  /**
-   * 실험적 기능 설정
-   */
-  experimental: {
-    serverActions: true,
-  },
 
   webpack: (config) => {
     config.resolve.alias = {
