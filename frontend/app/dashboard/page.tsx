@@ -45,10 +45,30 @@ export default function DashboardPage() {
    * 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
    */
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/auth/verify', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('인증 실패');
+        }
+      } catch (error) {
+        console.error('인증 확인 중 오류:', error);
+        logout();
+        router.push('/login');
+      }
+    };
+
     if (!user || !token) {
-      router.push('/login')
+      router.push('/login');
+    } else {
+      checkAuth();
     }
-  }, [user, token, router])
+  }, [user, token, router, logout]);
 
   // 키보드 단축키 설정
   useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
