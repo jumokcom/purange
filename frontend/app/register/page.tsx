@@ -12,29 +12,47 @@ export default function RegisterPage() {
   const router = useRouter()
   const { setUser, setToken } = useAuthStore()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError('')
     const formData = new FormData(e.currentTarget)
     const name = formData.get('name') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
+    if (!name?.trim()) {
+      setError('이름을 입력해주세요.')
+      return
+    }
+
+    if (!email?.trim()) {
+      setError('이메일을 입력해주세요.')
+      return
+    }
+
     if (password.length < 6) {
-      toast.error('비밀번호는 최소 6자 이상이어야 합니다.')
+      setError('비밀번호는 최소 6자 이상이어야 합니다.')
       return
     }
 
     try {
       setLoading(true)
       
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10초 타임아웃
+
       const response = await fetch('https://purange-backend.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name, email, password }),
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
 
       const data = await response.json()
 
@@ -48,7 +66,16 @@ export default function RegisterPage() {
       toast.success('회원가입이 완료되었습니다!')
       router.push('/dashboard')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '회원가입에 실패했습니다.')
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          setError('서버 응답이 너무 오래 걸립니다. 잠시 후 다시 시도해주세요.')
+        } else {
+          setError(error.message)
+        }
+      } else {
+        setError('회원가입 중 오류가 발생했습니다.')
+      }
+      toast.error('회원가입에 실패했습니다.')
     } finally {
       setLoading(false)
     }
@@ -104,6 +131,12 @@ export default function RegisterPage() {
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/20 transition-colors"
             />
           </div>
+
+          {error && (
+            <div className="text-red-400 text-sm text-center">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
