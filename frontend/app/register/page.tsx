@@ -9,11 +9,13 @@ import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import { useTheme } from 'next-themes'
 import { useHotkeys } from '@/hooks/useHotkeys'
+import { useAuthStore } from '@/lib/store'
 import { registerSchema, type RegisterInput } from '@/lib/validations'
 
 export default function RegisterPage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
+  const { setUser, setToken, setError, setLoading } = useAuthStore()
   
   const {
     register,
@@ -24,10 +26,8 @@ export default function RegisterPage() {
   })
 
   // 키보드 단축키 설정
-  useHotkeys({
-    'd': () => setTheme(theme === 'dark' ? 'light' : 'dark'),
-    'ctrl+k': () => document.querySelector<HTMLInputElement>('input[name="name"]')?.focus(),
-  })
+  useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
+  useHotkeys('ctrl+k', () => document.querySelector<HTMLInputElement>('input[name="name"]')?.focus())
 
   const onSubmit = async (data: RegisterInput) => {
     try {
