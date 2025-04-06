@@ -50,11 +50,16 @@ export class UserService {
         password: hashedPassword,
         name: createUserDto.name,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    // 비밀번호를 제외한 사용자 정보 반환
-    const { password: _, ...result } = user;
-    return result;
+    return user;
   }
 
   /**
@@ -115,14 +120,20 @@ export class UserService {
   async findById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!user) {
       throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
-    const { password, ...result } = user;
-    return result;
+    return user;
   }
 
   /**
