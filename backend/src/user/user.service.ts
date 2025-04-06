@@ -23,6 +23,8 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -67,15 +69,17 @@ export class UserService {
    * @param id 삭제할 사용자의 ID
    * @returns 삭제된 사용자 정보 (비밀번호 제외)
    */
-  async remove(id: number): Promise<Omit<User, 'password'>> {
+  async remove(id: number) {
     return this.prisma.user.delete({
       where: { id },
       select: {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
+        updatedAt: true,
       },
-    }) as Promise<Omit<User, 'password'>>;
+    });
   }
 
   /**
@@ -84,7 +88,7 @@ export class UserService {
    * @param data 수정할 사용자 정보
    * @returns 수정된 사용자 정보 (비밀번호 제외)
    */
-  async update(id: number, data: Prisma.UserUpdateInput): Promise<Omit<User, 'password'>> {
+  async update(id: number, data: Prisma.UserUpdateInput) {
     // 비밀번호가 포함된 경우 해시화
     if (data.password) {
       data.password = await bcrypt.hash(data.password as string, 10);
@@ -97,8 +101,10 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
+        updatedAt: true,
       },
-    }) as Promise<Omit<User, 'password'>>;
+    });
   }
 
   /**
