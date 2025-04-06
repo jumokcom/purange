@@ -98,15 +98,8 @@ export default function DashboardPage() {
       >
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Image
-              src="/logo.png"
-              alt="Purange Logo"
-              width={40}
-              height={40}
-              className="rounded-full"
-              priority
-            />
-            <span className="text-2xl font-bold">PURANGE</span>
+            <Image src="/logo.png" width={32} height={32} alt="로고" />
+            <span className="font-bold text-xl">Purange</span>
           </Link>
           <div className="flex items-center gap-4">
             <button
