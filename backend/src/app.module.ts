@@ -1,6 +1,6 @@
 /**
  * 애플리케이션의 루트 모듈
- * 모든 기능 모듈들을 통합하고 설정을 관리
+ * 모든 기능 모듈들을 통합하고 전역 설정을 관리
  */
 
 import { Module } from '@nestjs/common';
@@ -13,7 +13,10 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // 환경 변수 설정 모듈
+    /**
+     * 환경 변수 설정
+     * .env 파일을 통한 환경 설정 로드
+     */
     ConfigModule.forRoot({
       isGlobal: true, // 전역으로 사용 가능하도록 설정
     }),

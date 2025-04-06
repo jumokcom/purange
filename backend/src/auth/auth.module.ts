@@ -1,33 +1,35 @@
 /**
- * 인증 관련 기능을 모듈화하여 관리
- * JWT 전략, 로컬 전략 등의 인증 방식을 설정
+ * 인증 모듈
+ * JWT를 사용한 사용자 인증 및 권한 부여를 관리
  */
 
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { UserModule } from '../user/user.module';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { PrismaModule } from '../prisma/prisma.module';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    ConfigModule,
-    UserModule,
-    PassportModule,
+    /**
+     * JWT 모듈 설정
+     * 토큰 생성 및 검증에 필요한 설정을 동적으로 로드
+     */
     JwtModule.registerAsync({
-      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET') || 'your-secret-key',
-        signOptions: { expiresIn: '1d' },
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: '1d', // 토큰 만료 시간: 1일
+        },
       }),
       inject: [ConfigService],
     }),
+    PrismaModule, // 데이터베이스 접근을 위한 Prisma 모듈
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  exports: [AuthService], // 다른 모듈에서 AuthService 사용 가능하도록 export
 })
 export class AuthModule {}
