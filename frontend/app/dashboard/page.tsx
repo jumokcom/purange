@@ -30,7 +30,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const { user, logout } = useAuthStore()
-  const { isDebugMode, toggleDebugMode } = useUIStore()
+  const { debugMode, toggleDebugMode } = useUIStore()
 
   useEffect(() => {
     if (!user) {
@@ -159,7 +159,7 @@ export default function DashboardPage() {
                 onClick={() => toggleDebugMode()}
                 className="bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <span className="text-xl">⚙️</span> 디버그 모드 {isDebugMode ? 'OFF' : 'ON'}
+                <span className="text-xl">⚙️</span> 디버그 모드 {debugMode ? 'OFF' : 'ON'}
               </button>
               <button
                 className="bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -221,14 +221,14 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* 디버그 정보 */}
-        {isDebugMode && (
+        {debugMode && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 p-4 bg-black/20 rounded-lg text-sm font-mono"
+            className="fixed bottom-4 right-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
           >
             <pre className="overflow-auto">
-              {JSON.stringify({ user, theme, isDebugMode }, null, 2)}
+              {JSON.stringify({ user, theme, debugMode }, null, 2)}
             </pre>
           </motion.div>
         )}
