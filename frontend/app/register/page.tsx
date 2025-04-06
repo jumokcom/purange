@@ -45,14 +45,18 @@ export default function RegisterPage() {
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result.message || '회원가입에 실패했습니다.')
+        const errorMessage = result.message || '회원가입에 실패했습니다.'
+        setError(errorMessage)
+        toast.error(errorMessage)
+        return
       }
 
       toast.success('회원가입이 완료되었습니다!')
       router.push('/login')
     } catch (error) {
-      setError(error instanceof Error ? error.message : '회원가입에 실패했습니다.')
-      toast.error('회원가입에 실패했습니다.')
+      const errorMessage = error instanceof Error ? error.message : '서버와의 연결에 실패했습니다.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
