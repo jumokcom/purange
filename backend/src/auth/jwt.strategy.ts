@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!secretKey) {
       throw new Error('JWT_SECRET is not defined');
     }
-    
+
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -38,6 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: { id: payload.sub },
     });
     
+    if (!user) {
+      return null;
+    }
+
     const { password, ...result } = user;
     return result;
   }

@@ -1,9 +1,9 @@
 /**
  * 사용자 관련 비즈니스 로직을 처리하는 서비스
- * 사용자 생성, 조회, 수정 등의 기능을 담당
+ * 사용자 생성, 조회, 수정, 삭제 등의 기능을 담당
  */
 
-import { Injectable, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client'
 import * as bcrypt from 'bcrypt';
@@ -113,8 +113,30 @@ export class UserService {
    * @returns 찾은 사용자 정보 또는 null
    */
   async findById(id: number) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
     });
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    const { password, ...result } = user;
+    return result;
+  }
+
+  /**
+   * 사용자 삭제
+   * @param id 사용자 ID
+   * @throws NotFoundException 사용자를 찾을 수 없는 경우
+   */
+  async delete(id: number): Promise<void> {
+    try {
+      await this.prisma.user.delete({
+        where: { id },
+      });
+    } catch (error) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
   }
 }
