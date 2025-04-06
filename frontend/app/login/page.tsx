@@ -11,7 +11,6 @@ import { useTheme } from 'next-themes'
 import { useHotkeys } from '@/hooks/useHotkeys'
 import { useAuthStore } from '@/lib/store'
 import { loginSchema, type LoginInput } from '@/lib/validations'
-import { login } from '@/lib/login'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -27,22 +26,39 @@ export default function LoginPage() {
   })
 
   // 키보드 단축키 설정
-  useHotkeys({
-    'd': () => setTheme(theme === 'dark' ? 'light' : 'dark'),
-    'ctrl+k': () => document.querySelector<HTMLInputElement>('input[name="email"]')?.focus(),
-  })
+  useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
+  useHotkeys('ctrl+k', () => document.querySelector<HTMLInputElement>('input[name="email"]')?.focus())
 
   const onSubmit = async (data: LoginInput) => {
     try {
       setLoading(true)
-      const response = await login(data.email, data.password)
-      setToken(response.access_token)
-      setUser(response.user)
-      toast.success('로그인 성공!')
+      setError(null)
+      
+      const response = await fetch('https://purange-backend.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || '로그인에 실패했습니다.')
+      }
+
+      setUser({
+        id: String(result.user.id),
+        email: result.user.email,
+        name: result.user.name,
+      })
+      setToken(result.token)
+      
+      toast.success('로그인되었습니다.')
       router.push('/dashboard')
-    } catch (err) {
-      console.error('로그인 에러:', err)
-      setError(err instanceof Error ? err.message : '로그인 중 오류가 발생했습니다.')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '로그인에 실패했습니다.')
       toast.error('로그인에 실패했습니다.')
     } finally {
       setLoading(false)
