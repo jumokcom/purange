@@ -135,12 +135,6 @@ export default function DashboardPage() {
                 <span className="font-medium">계정 생성일:</span>
                 <span>{new Date().toLocaleDateString()}</span>
               </div>
-              <button
-                onClick={() => router.push('/change-password')}
-                className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                비밀번호 변경
-              </button>
             </div>
           </motion.div>
 
