@@ -5,7 +5,7 @@
 
 // src/prisma/prisma.service.ts
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 interface QueryEvent {
   timestamp: Date;
@@ -22,7 +22,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   constructor() {
     super({
       log: [
-        { emit: 'event', level: 'query' },
         { emit: 'stdout', level: 'info' },
         { emit: 'stdout', level: 'warn' },
         { emit: 'stdout', level: 'error' },
@@ -39,11 +38,16 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       await this.$connect();
       this.logger.log('데이터베이스 연결 성공');
 
-      // 데이터베이스 연결 이벤트 리스너 설정
-      this.$on<any>('query', (e: QueryEvent) => {
-        this.logger.debug(`Query: ${e.query}`);
-        this.logger.debug(`Params: ${e.params}`);
-        this.logger.debug(`Duration: ${e.duration}ms`);
+      // 쿼리 실행 시 로깅
+      this.$use(async (params, next) => {
+        const startTime = Date.now();
+        const result = await next(params);
+        const duration = Date.now() - startTime;
+        
+        this.logger.debug(`Query: ${params.model}.${params.action}`);
+        this.logger.debug(`Duration: ${duration}ms`);
+        
+        return result;
       });
     } catch (error) {
       this.logger.error(`데이터베이스 연결 실패: ${error.message}`);
