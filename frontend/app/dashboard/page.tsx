@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
   // 키보드 단축키 설정
   useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
-  useHotkeys('h', () => router.push('/'))
+  useHotkeys('h', () => router.push('/dashboard'))
   useHotkeys('x', () => {
     logout()
     toast.success('로그아웃되었습니다.')
@@ -97,7 +97,7 @@ export default function DashboardPage() {
         className="bg-black/20 backdrop-blur-sm sticky top-0 z-10"
       >
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <Image
               src="/logo.png"
               alt="Purange Logo"
@@ -180,10 +180,10 @@ export default function DashboardPage() {
             </h2>
             <div className="flex flex-col gap-4">
               <Link
-                href="/"
+                href="/dashboard"
                 className="bg-[#f97316] hover:bg-[#ea580c] text-white px-4 py-3 rounded-lg transition-colors text-center flex items-center justify-center gap-2"
               >
-                <span className="text-xl">🏠</span> 홈으로 가기
+                <span className="text-xl">🏠</span> 대시보드
               </Link>
               <button
                 onClick={() => toggleDebugMode()}
