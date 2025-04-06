@@ -31,8 +31,10 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterInput) => {
     try {
-      console.log('회원가입 시도 중...', { name: data.name, email: data.email })
-      const res = await fetch('http://localhost:3001/users', {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch('https://purange-backend.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,17 +42,19 @@ export default function RegisterPage() {
         body: JSON.stringify(data),
       })
 
-      const responseData = await res.json()
+      const result = await response.json()
 
-      if (!res.ok) {
-        throw new Error(responseData.message || '회원가입에 실패했습니다.')
+      if (!response.ok) {
+        throw new Error(result.message || '회원가입에 실패했습니다.')
       }
 
       toast.success('회원가입이 완료되었습니다!')
       router.push('/login')
-    } catch (err) {
-      console.error('회원가입 에러:', err)
-      toast.error(err instanceof Error ? err.message : '회원가입 중 오류가 발생했습니다.')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '회원가입에 실패했습니다.')
+      toast.error('회원가입에 실패했습니다.')
+    } finally {
+      setLoading(false)
     }
   }
 
