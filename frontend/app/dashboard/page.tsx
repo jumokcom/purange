@@ -223,9 +223,9 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="fixed bottom-4 right-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+            className="fixed bottom-4 right-4 p-4 bg-gray-800 dark:bg-gray-900 text-white rounded-lg shadow-lg"
           >
-            <pre className="overflow-auto">
+            <pre className="overflow-auto text-xs">
               {JSON.stringify({ user, theme, debugMode }, null, 2)}
             </pre>
           </motion.div>
