@@ -15,7 +15,7 @@ import { registerSchema, type RegisterInput } from '@/lib/validations'
 export default function RegisterPage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
-  const { setUser, setToken, setError, setLoading } = useAuthStore()
+  const { setError, setLoading } = useAuthStore()
   
   const {
     register,
@@ -39,7 +39,11 @@ export default function RegisterPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          password: data.password
+        }),
       })
 
       const result = await response.json()
@@ -147,8 +151,8 @@ export default function RegisterPage() {
               {errors.password && (
                 <p className="mt-1 text-red-400 text-sm">{errors.password.message}</p>
               )}
-              <p className="text-white/60 text-sm mt-2">
-                비밀번호는 영문과 숫자를 포함하여 최소 6자 이상이어야 합니다
+              <p className="mt-2 text-white/60 text-sm">
+                영문과 숫자를 포함하여 최소 6자 이상이어야 합니다
               </p>
             </div>
             <button
@@ -156,7 +160,7 @@ export default function RegisterPage() {
               className="w-full p-3 bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '처리 중...' : '회원가입'}
+              {isSubmitting ? '회원가입 중...' : '회원가입'}
             </button>
           </form>
 

@@ -45,7 +45,10 @@ export default function LoginPage() {
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result.message || '로그인에 실패했습니다.')
+        const errorMessage = result.message || '로그인에 실패했습니다.'
+        setError(errorMessage)
+        toast.error(errorMessage)
+        return
       }
 
       setUser({
@@ -55,11 +58,12 @@ export default function LoginPage() {
       })
       setToken(result.token)
       
-      toast.success('로그인되었습니다.')
+      toast.success('로그인되었습니다!')
       router.push('/dashboard')
     } catch (error) {
-      setError(error instanceof Error ? error.message : '로그인에 실패했습니다.')
-      toast.error('로그인에 실패했습니다.')
+      const errorMessage = error instanceof Error ? error.message : '서버와의 연결에 실패했습니다.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
