@@ -1,3 +1,5 @@
+'use client'
+
 interface SkeletonProps {
   className?: string
   count?: number
@@ -18,10 +20,11 @@ export function Skeleton({ className = '', count = 1 }: SkeletonProps) {
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl">
-      <div className="space-y-4">
-        <Skeleton className="h-6 w-2/3" />
-        <Skeleton className="h-4 w-full" count={3} />
+    <div className="p-4 border rounded-lg shadow animate-pulse">
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4" />
+      <div className="space-y-3">
+        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
       </div>
     </div>
   )
@@ -29,10 +32,12 @@ export function CardSkeleton() {
 
 export function ProfileSkeleton() {
   return (
-    <div className="space-y-3">
-      <Skeleton className="h-14 w-14 rounded-full" />
-      <Skeleton className="h-4 w-24" />
-      <Skeleton className="h-4 w-32" />
+    <div className="flex items-center space-x-4 animate-pulse">
+      <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full" />
+      <div className="space-y-2">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+      </div>
     </div>
   )
 } 

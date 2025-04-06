@@ -1,9 +1,9 @@
 import { useEffect, useCallback } from 'react'
 
-type KeyHandler = (e: KeyboardEvent) => void
-type KeyMap = Record<string, KeyHandler>
+type KeyHandler = () => void
+type KeyMap = { [key: string]: KeyHandler }
 
-export function useHotkeys(keyMap: KeyMap) {
+export const useHotkeys = (keyMap: KeyMap) => {
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       // 입력 필드에서는 단축키를 비활성화
@@ -17,19 +17,9 @@ export function useHotkeys(keyMap: KeyMap) {
       const key = event.key.toLowerCase()
       const handler = keyMap[key]
 
-      if (handler && !event.ctrlKey && !event.altKey && !event.metaKey) {
+      if (handler) {
         event.preventDefault()
-        handler(event)
-      }
-
-      // Ctrl/Cmd + key 조합
-      if (event.ctrlKey || event.metaKey) {
-        const ctrlKey = `ctrl+${key}`
-        const handler = keyMap[ctrlKey]
-        if (handler) {
-          event.preventDefault()
-          handler(event)
-        }
+        handler()
       }
     },
     [keyMap]
@@ -37,9 +27,7 @@ export function useHotkeys(keyMap: KeyMap) {
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress)
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress)
-    }
+    return () => window.removeEventListener('keydown', handleKeyPress)
   }, [handleKeyPress])
 }
 
