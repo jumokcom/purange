@@ -1,3 +1,7 @@
+-- DropTable
+DROP TABLE IF EXISTS "todos";
+DROP TABLE IF EXISTS "users";
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
