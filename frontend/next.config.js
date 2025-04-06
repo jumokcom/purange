@@ -1,3 +1,8 @@
+/**
+ * Next.js 설정 파일
+ * 이미지 도메인, PWA 설정 등을 관리
+ */
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
@@ -5,9 +10,24 @@ const withPWA = require('next-pwa')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  /**
+   * 이미지 도메인 설정
+   * 외부 이미지 소스를 허용할 도메인 목록
+   */
   images: {
-    domains: ['localhost', 'purange-backend.onrender.com'],
+    domains: [
+      'localhost',
+      'purange-backend.onrender.com'
+    ],
   },
+  
+  /**
+   * 실험적 기능 설정
+   */
+  experimental: {
+    serverActions: true,
+  },
+
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

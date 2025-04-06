@@ -1,3 +1,8 @@
+/**
+ * 대시보드 페이지 컴포넌트
+ * 로그인한 사용자의 메인 화면을 표시
+ */
+
 'use client'
 
 import { useEffect } from 'react'
@@ -10,6 +15,9 @@ import { useTheme } from 'next-themes'
 import { useHotkeys } from '@/hooks/useHotkeys'
 import { useAuthStore, useUIStore } from '@/lib/store'
 import { CardSkeleton } from '@/components/Skeleton'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Calendar } from '@/components/ui/calendar'
+import { TodoList } from '@/components/TodoList'
 
 const container = {
   hidden: { opacity: 0 },
@@ -29,14 +37,18 @@ const item = {
 export default function DashboardPage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
-  const { user, logout } = useAuthStore()
+  const { user, logout, token } = useAuthStore()
   const { debugMode, toggleDebugMode } = useUIStore()
 
+  /**
+   * 인증 상태 확인
+   * 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
+   */
   useEffect(() => {
-    if (!user) {
+    if (!user || !token) {
       router.push('/login')
     }
-  }, [user, router])
+  }, [user, token, router])
 
   // 키보드 단축키 설정
   useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
@@ -230,6 +242,34 @@ export default function DashboardPage() {
             </pre>
           </motion.div>
         )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 캘린더 카드 */}
+          <Card>
+            <CardHeader>
+              <CardTitle>일정 캘린더</CardTitle>
+              <CardDescription>
+                이번 달 일정을 한눈에 확인하세요
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Calendar />
+            </CardContent>
+          </Card>
+
+          {/* 할 일 목록 카드 */}
+          <Card>
+            <CardHeader>
+              <CardTitle>할 일 목록</CardTitle>
+              <CardDescription>
+                오늘의 할 일을 관리하세요
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TodoList />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
