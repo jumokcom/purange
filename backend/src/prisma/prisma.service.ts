@@ -7,13 +7,26 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
+interface QueryEvent {
+  timestamp: Date;
+  query: string;
+  params: string;
+  duration: number;
+  target: string;
+}
+
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
     super({
-      log: ['query', 'info', 'warn', 'error'],
+      log: [
+        { emit: 'event', level: 'query' },
+        { emit: 'stdout', level: 'info' },
+        { emit: 'stdout', level: 'warn' },
+        { emit: 'stdout', level: 'error' },
+      ],
     });
   }
 
@@ -21,12 +34,19 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
    * 모듈 초기화 시 데이터베이스 연결
    */
   async onModuleInit() {
+    this.logger.log('데이터베이스 연결 시도 중...');
     try {
-      this.logger.log('데이터베이스 연결 시도 중...');
       await this.$connect();
       this.logger.log('데이터베이스 연결 성공');
+
+      // 데이터베이스 연결 이벤트 리스너 설정
+      this.$on<any>('query', (e: QueryEvent) => {
+        this.logger.debug(`Query: ${e.query}`);
+        this.logger.debug(`Params: ${e.params}`);
+        this.logger.debug(`Duration: ${e.duration}ms`);
+      });
     } catch (error) {
-      this.logger.error('데이터베이스 연결 실패:', error);
+      this.logger.error(`데이터베이스 연결 실패: ${error.message}`);
       throw error;
     }
   }
@@ -35,12 +55,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
    * 모듈 종료 시 데이터베이스 연결 해제
    */
   async onModuleDestroy() {
+    this.logger.log('데이터베이스 연결 종료 중...');
     try {
-      this.logger.log('데이터베이스 연결 해제 중...');
       await this.$disconnect();
-      this.logger.log('데이터베이스 연결 해제 완료');
+      this.logger.log('데이터베이스 연결 종료 완료');
     } catch (error) {
-      this.logger.error('데이터베이스 연결 해제 실패:', error);
+      this.logger.error(`데이터베이스 연결 종료 실패: ${error.message}`);
+      throw error;
     }
   }
 
