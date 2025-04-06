@@ -3,10 +3,11 @@
  * 사용자 인증 관련 엔드포인트 처리 (로그인, 회원가입)
  */
 
-import { Body, Controller, Post, HttpCode, HttpStatus, Logger, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, Logger, BadRequestException, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { IsEmail, IsString, MinLength, IsNotEmpty } from 'class-validator';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 export class RegisterDto {
   @IsNotEmpty({ message: '이름을 입력해주세요.' })
@@ -88,5 +89,20 @@ export class AuthController {
       this.logger.error(`로그인 실패: ${error.message}`);
       throw error;
     }
+  }
+
+  /**
+   * 토큰 검증 엔드포인트
+   * JWT 토큰의 유효성을 검사
+   * @returns 토큰이 유효한 경우 200 OK
+   */
+  @ApiOperation({ summary: '토큰 검증', description: 'JWT 토큰의 유효성을 검사합니다.' })
+  @ApiResponse({ status: 200, description: '유효한 토큰' })
+  @ApiResponse({ status: 401, description: '유효하지 않은 토큰' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('verify')
+  async verifyToken() {
+    return { message: '유효한 토큰입니다.' };
   }
 }
