@@ -34,6 +34,8 @@ export default function RegisterPage() {
       setLoading(true)
       setError(null)
       
+      console.log('회원가입 요청 데이터:', data)
+      
       const response = await fetch('https://purange-backend.onrender.com/auth/register', {
         method: 'POST',
         headers: {
@@ -47,9 +49,11 @@ export default function RegisterPage() {
       })
 
       const result = await response.json()
+      console.log('회원가입 응답:', result)
 
       if (!response.ok) {
         const errorMessage = result.message || '회원가입에 실패했습니다.'
+        console.error('회원가입 실패:', errorMessage)
         setError(errorMessage)
         toast.error(errorMessage)
         return
@@ -58,6 +62,7 @@ export default function RegisterPage() {
       toast.success('회원가입이 완료되었습니다!')
       router.push('/login')
     } catch (error) {
+      console.error('회원가입 에러:', error)
       const errorMessage = error instanceof Error ? error.message : '서버와의 연결에 실패했습니다.'
       setError(errorMessage)
       toast.error(errorMessage)

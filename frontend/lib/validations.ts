@@ -8,14 +8,17 @@ export const loginSchema = z.object({
   password: z
     .string()
     .min(6, '비밀번호는 최소 6자 이상이어야 합니다.')
-    .max(100, '비밀번호가 너무 깁니다.'),
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+      '비밀번호는 영문과 숫자를 포함하여 6자 이상이어야 합니다.'
+    ),
 })
 
 export const registerSchema = z.object({
   name: z
     .string()
     .min(2, '이름은 최소 2자 이상이어야 합니다.')
-    .max(100, '이름이 너무 깁니다.'),
+    .max(50, '이름은 최대 50자까지 가능합니다.'),
   email: z
     .string()
     .min(1, '이메일을 입력해주세요.')
@@ -23,10 +26,9 @@ export const registerSchema = z.object({
   password: z
     .string()
     .min(6, '비밀번호는 최소 6자 이상이어야 합니다.')
-    .max(100, '비밀번호가 너무 깁니다.')
     .regex(
-      /^(?=.*[a-zA-Z])(?=.*[0-9])/,
-      '비밀번호는 영문과 숫자를 모두 포함해야 합니다.'
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+      '비밀번호는 영문과 숫자를 포함하여 6자 이상이어야 합니다.'
     ),
 })
 
