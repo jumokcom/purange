@@ -42,8 +42,11 @@ export default function RegisterPage() {
         throw new Error(data.message || '회원가입에 실패했습니다.')
       }
 
+      setUser(data.user)
+      setToken(data.access_token)
+
       toast.success('회원가입이 완료되었습니다!')
-      router.push('/login')
+      router.push('/dashboard')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : '회원가입에 실패했습니다.')
     } finally {
