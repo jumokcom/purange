@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils"
 
 /**
  * 기본 카드 컴포넌트
- * 카드의 기본 컨테이너 역할
+ * 콘텐츠를 감싸는 기본 컨테이너
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -27,7 +30,10 @@ Card.displayName = "Card"
 
 /**
  * 카드 헤더 컴포넌트
- * 카드의 상단부 영역
+ * 카드의 상단부 영역을 구성
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -44,6 +50,9 @@ CardHeader.displayName = "CardHeader"
 /**
  * 카드 제목 컴포넌트
  * 카드의 주요 제목을 표시
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
@@ -60,6 +69,9 @@ CardTitle.displayName = "CardTitle"
 /**
  * 카드 설명 컴포넌트
  * 카드의 부가 설명을 표시
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -76,6 +88,9 @@ CardDescription.displayName = "CardDescription"
 /**
  * 카드 콘텐츠 컴포넌트
  * 카드의 주요 내용을 표시
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const CardContent = React.forwardRef<
   HTMLDivElement,
@@ -87,7 +102,10 @@ CardContent.displayName = "CardContent"
 
 /**
  * 카드 푸터 컴포넌트
- * 카드의 하단부 영역
+ * 카드의 하단부 영역을 구성
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
  */
 const CardFooter = React.forwardRef<
   HTMLDivElement,

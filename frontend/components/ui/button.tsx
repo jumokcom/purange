@@ -1,8 +1,18 @@
+/**
+ * 버튼 컴포넌트
+ * 다양한 스타일과 크기를 지원하는 재사용 가능한 버튼
+ */
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+/**
+ * 버튼의 기본 스타일과 변형을 정의하는 설정
+ * variant: 버튼의 시각적 스타일 (default, destructive, outline, secondary, ghost, link)
+ * size: 버튼의 크기 (default, sm, lg, icon)
+ */
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
@@ -13,7 +23,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -33,14 +43,23 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonVariants = VariantProps<typeof buttonVariants>
-
+/**
+ * 버튼 컴포넌트의 props 타입 정의
+ */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    ButtonVariants {
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
+/**
+ * 버튼 컴포넌트
+ * @param {ButtonProps} props - 버튼 속성
+ * @param {boolean} props.asChild - true일 경우 자식 요소를 버튼으로 렌더링
+ * @param {string} props.className - 추가 CSS 클래스
+ * @param {string} props.variant - 버튼 스타일 변형
+ * @param {string} props.size - 버튼 크기
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
@@ -55,4 +74,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants, type ButtonVariants } 
+export { Button, buttonVariants } 

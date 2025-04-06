@@ -1,3 +1,8 @@
+/**
+ * 캘린더 컴포넌트
+ * react-day-picker를 사용한 날짜 선택 컴포넌트
+ */
+
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
@@ -6,8 +11,24 @@ import { ko } from 'date-fns/locale'
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
+/**
+ * 캘린더 컴포넌트의 props 타입 정의
+ * DayPicker의 모든 props를 상속
+ */
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
+/**
+ * 캘린더 컴포넌트
+ * - 한국어 지원
+ * - 커스텀 네비게이션 버튼
+ * - 반응형 디자인
+ * - 다크모드 지원
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.className - 추가 CSS 클래스
+ * @param props.classNames - 각 요소별 CSS 클래스
+ * @param props.showOutsideDays - 이전/다음 달의 날짜 표시 여부
+ */
 export function Calendar({
   className,
   classNames,

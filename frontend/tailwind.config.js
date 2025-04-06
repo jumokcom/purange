@@ -1,12 +1,31 @@
+/**
+ * Tailwind CSS 설정 파일
+ * 프로젝트의 스타일링 시스템 설정을 정의
+ */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  /**
+   * 다크모드 설정
+   * class 기반의 다크모드 활성화
+   */
   darkMode: ["class"],
+
+  /**
+   * 콘텐츠 설정
+   * Tailwind가 스캔할 파일 경로 설정
+   */
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
   ],
+
+  /**
+   * 테마 설정
+   * 커스텀 디자인 시스템 정의
+   */
   theme: {
     container: {
       center: true,
@@ -72,5 +91,10 @@ module.exports = {
       },
     },
   },
+
+  /**
+   * 플러그인 설정
+   * 추가 Tailwind 플러그인 설정
+   */
   plugins: [require("tailwindcss-animate")],
 } 
