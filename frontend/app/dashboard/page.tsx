@@ -39,16 +39,14 @@ export default function DashboardPage() {
   }, [user, router])
 
   // 키보드 단축키 설정
-  useHotkeys({
-    'd': () => setTheme(theme === 'dark' ? 'light' : 'dark'),
-    'h': () => router.push('/'),
-    'x': () => {
-      logout()
-      toast.success('로그아웃되었습니다.')
-      router.push('/login')
-    },
-    '`': () => toggleDebugMode(),
+  useHotkeys('d', () => setTheme(theme === 'dark' ? 'light' : 'dark'))
+  useHotkeys('h', () => router.push('/'))
+  useHotkeys('x', () => {
+    logout()
+    toast.success('로그아웃되었습니다.')
+    router.push('/login')
   })
+  useHotkeys('`', () => toggleDebugMode())
 
   if (!user) {
     return (
