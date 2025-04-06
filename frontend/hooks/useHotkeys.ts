@@ -1,39 +1,23 @@
-import { useEffect, useCallback } from 'react'
+'use client'
 
-type KeyHandler = () => void
-type KeyMap = { [key: string]: KeyHandler }
+import { useEffect } from 'react'
 
-export const useHotkeys = (keyMap: KeyMap) => {
-  const handleKeyPress = useCallback(
-    (event: KeyboardEvent) => {
-      // 입력 필드에서는 단축키를 비활성화
-      if (
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement
-      ) {
-        return
-      }
+type KeyHandler = (e: KeyboardEvent) => void
 
-      const key = event.key.toLowerCase()
-      const handler = keyMap[key]
-
-      if (handler) {
-        event.preventDefault()
-        handler()
-      }
-    },
-    [keyMap]
-  )
-
+export function useHotkeys(key: string, handler: KeyHandler) {
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [handleKeyPress])
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === key.toLowerCase()) {
+        handler(e)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [key, handler])
 }
 
 // 사용 예시:
-// useHotkeys({
-//   'd': () => toggleTheme(),
-//   'ctrl+k': () => openCommandPalette(),
-//   'escape': () => closeModal(),
-// }) 
+// useHotkeys('d', () => toggleTheme())
+// useHotkeys('ctrl+k', () => openCommandPalette())
+// useHotkeys('escape', () => closeModal()) 

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { useHotkeys } from '@/hooks/useHotkeys'
 import { useAuthStore, useUIStore } from '@/lib/store'
+import { useRouter } from 'next/navigation'
 
 const container = {
   hidden: { opacity: 0 },
@@ -70,15 +71,13 @@ const features = [
 export default function HomePage() {
   const { theme, setTheme } = useTheme()
   const { user, logout } = useAuthStore()
-  const { isDebugMode, toggleDebugMode } = useUIStore()
+  const { debugMode, toggleDebugMode } = useUIStore()
+  const router = useRouter()
 
   // 키보드 단축키 설정
-  useHotkeys({
-    'd': () => setTheme(theme === 'dark' ? 'light' : 'dark'),
-    'l': () => window.location.href = '/login',
-    'r': () => window.location.href = '/register',
-    '`': () => toggleDebugMode(),
-  })
+  useHotkeys('d', () => toggleDebugMode())
+  useHotkeys('h', () => router.push('/'))
+  useHotkeys('l', () => router.push('/login'))
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#805ad5] to-[#b794f4] dark:from-[#4a2b8a] dark:to-[#6b46c1] text-white">
@@ -242,14 +241,14 @@ export default function HomePage() {
         </motion.div>
 
         {/* 디버그 정보 */}
-        {isDebugMode && (
+        {debugMode && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 p-4 bg-black/20 rounded-lg text-sm font-mono"
           >
             <pre className="overflow-auto">
-              {JSON.stringify({ user, theme, isDebugMode }, null, 2)}
+              {JSON.stringify({ user, theme, debugMode }, null, 2)}
             </pre>
           </motion.div>
         )}

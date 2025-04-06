@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface User {
-  id: number
+  id: string
   email: string
   name: string
 }
@@ -16,7 +16,7 @@ interface AuthState {
 }
 
 interface UIState {
-  isDebugMode: boolean
+  debugMode: boolean
   toggleDebugMode: () => void
 }
 
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
   )
 )
 
-export const useUIStore = create<UIState>()((set) => ({
-  isDebugMode: false,
-  toggleDebugMode: () => set((state) => ({ isDebugMode: !state.isDebugMode })),
+export const useUIStore = create<UIState>((set) => ({
+  debugMode: false,
+  toggleDebugMode: () => set((state) => ({ debugMode: !state.debugMode })),
 })) 
